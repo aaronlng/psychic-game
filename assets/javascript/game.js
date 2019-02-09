@@ -1,44 +1,76 @@
-//defining array for computer choices
-var computerChoices = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"];
-
-//variables to hold values of wins, losses, attempts, and guesses so far.
+//Variables for the game
 var wins = 0;
 var losses = 0;
-var gleft = 9;
+var left = 9;
+var soFar = [];
+var computerLetter;
 
 //variables for the reference in the body
 var winsText = document.getElementById("wins-text");
 var lossesText = document.getElementById("losses-text");
-var gleftText = document.getElementById("gleft-text");
-var gsofarText = document.getElementById("gsofar-text");
-
-//computer guess onload
-// document.body.onload = function () {
+var leftText = document.getElementById("left-text");
+var sofarText = document.getElementById("sofar-text");
     
-     //display the content
-     winsText.textContent = "Wins: " + wins;
-     lossesText.textContent = "Losses: " + losses;
-     gleftText.textContent = "Guesses Left: " + gleft;
-     gsofarText.textContent = "Your Guesses so far: ";
-// };
+//display the content
+winsText.textContent = "Wins: " + wins;
+lossesText.textContent = "Losses: " + losses;
+leftText.textContent = "Guesses Left: " + left;
+sofarText.textContent = "Your Guesses so Far: " + soFar;
 
-//defining computer selection
-var computerSelection = computerChoices[Math.floor(Math.random() * computerChoices.length)];
+//initialize the game
+initialize();
 
-document.onkeyup = function(event) {
+function initialize() {
+    var computerChoices = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"];
+    computerLetter = computerChoices[Math.floor(Math.random() * computerChoices.length)];
+    console.log(computerLetter);
 
-    //determining user selection
-    var userSelect = event.key;
 
-    //determining if user guessed correct key
-    if (userSelect === computerSelection) {
-        wins++;
+    checkIfCorrect();
+
+    function checkIfCorrect() {
+
+        document.onkeypress = function(event) {
+            var userGuess = event.key;
+            if (userGuess === computerLetter) {
+                alert("you win!");
+                wins = wins +1;
+                document.getElementById("wins-text").innerHTML = "Wins: " + wins;
+
+                reset();
+            } else {
+                left = left - 1;
+                document.getElementById("left-text").innerHTML = "Guesses Left: " + left;
+                soFar.push(userGuess);
+                document.getElementById("sofar-text").innerHTML = "Your Guesses so Far: " + soFar;
+
+                noGuessesLeft();
+            }
+        }
+    };
+
+    function reset() {
+        left = 9;
+        soFar = [];
+        document.getElementById("left-text").innerHTML = "Guesses Left: " + left;
+        document.getElementById("sofar-text").innerHTML = "Your Guesses so Far: " + soFar;
+        initialize();
     }
-    else {
-        losses++;
-        gleft--;
+
+    function noGuessesLeft() {
+        if (left === 0) {
+            alert("You Lose.");
+            losses = losses + 1;
+            document.getElementById("losses-text").innerHTML = "Losses: " + losses;
+
+            reset();
+        } else {
+            checkIfCorrect();
+        }
     }
-};
+}
+
+
 
 
 
