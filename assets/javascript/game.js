@@ -1,77 +1,73 @@
 //Variables for the game
+
+//The array of options for the computer to choose from
+var computerChoices = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"];
+
+//Number of guesses left that will decrease every guess
+var left = 9;
+
+//This array will hold whatever letters are guessed
+var soFar = [];
+
+//This variable will contain the random letter selected by the computer
+var computerLetter = null;
+
+//counter for wins/losses
 var wins = 0;
 var losses = 0;
-var left = 9;
-var soFar = [];
-var computerLetter;
 
-//variables for the reference in the body
-var winsText = document.getElementById("wins-text");
-var lossesText = document.getElementById("losses-text");
-var leftText = document.getElementById("left-text");
-var sofarText = document.getElementById("sofar-text");
-    
-//display the content
-winsText.textContent = "Wins: " + wins;
-lossesText.textContent = "Losses: " + losses;
-leftText.textContent = "Guesses Left: " + left;
-sofarText.textContent = "Your Guesses so Far: " + soFar;
+//creating the functions to updateGuesses, updateGuessesLeft, and updateGuessesSoFar
+var updateGuessesLeft = function() {
+    document.querySelector("#left-text").innerHTML = left;
+};
 
-//initialize the game
-initialize();
-
-function initialize() {
-    var computerChoices = ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m"];
+var updateLetterToGuess = function() {
     computerLetter = computerChoices[Math.floor(Math.random() * computerChoices.length)];
-    console.log(computerLetter);
+};
 
+var updateGuessesSoFar = function() {
+    document.querySelector("#sofar-text").innerHTML = soFar.join(", ");
+};
 
-    checkIfCorrect();
+//Function to be called when we reset everything
+var reset = function() {
+    left = 9;
+    soFar = [];
+    updateLetterToGuess();
+    updateGuessesLeft();
+    updateGuessesSoFar();
+};
 
-    function checkIfCorrect() {
+//Execute on page load.
+updateLetterToGuess();
+updateGuessesLeft();
+// console.log(computerLetter);
 
-        document.onkeypress = function(event) {
-            var userGuess = event.key;
-            if (userGuess === computerLetter) {
-                alert("you win!");
-                wins = wins +1;
-                document.getElementById("wins-text").innerHTML = "Wins: " + wins;
+//Function to capture the keyboard clicks
+document.onkeydown = function(event) {
+    
+    left--;
+    var letter = String.fromCharCode(event.which).toLowerCase();
+    soFar.push(letter);
 
-                reset();
-            } else {
-                left = left - 1;
-                document.getElementById("left-text").innerHTML = "Guesses Left: " + left;
-                soFar.push(userGuess);
-                document.getElementById("sofar-text").innerHTML = "Your Guesses so Far: " + soFar;
+    //Run the update functions
+    updateGuessesLeft();
+    updateGuessesSoFar();
 
-                noGuessesLeft();
-            }
-        }
-    };
-
-    function reset() {
-        left = 9;
-        soFar = [];
-        document.getElementById("left-text").innerHTML = "Guesses Left: " + left;
-        document.getElementById("sofar-text").innerHTML = "Your Guesses so Far: " + soFar;
-        initialize();
+    //Check for a match
+    if (letter === computerLetter) {
+        wins++;
+        document.querySelector("#wins-text").innerHTML = wins;
+        alert("You guessed correctly. You win!");
+        reset();
+        // console.log(computerLetter);
     }
 
-    function noGuessesLeft() {
-        if (left === 0) {
-            alert("You Lose.");
-            losses = losses + 1;
-            document.getElementById("losses-text").innerHTML = "Losses: " + losses;
-
-            reset();
-        } else {
-            checkIfCorrect();
-        }
+    if (left === 0) {
+        losses++;
+        document.querySelector("#losses-text").innerHTML = losses;
+        alert("You are out of guesses. You Lose!");
+        reset();
+        // console.log(computerLetter);        
     }
-}
-
-
-
-
-
-
+};
