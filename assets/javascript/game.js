@@ -45,7 +45,6 @@ updateGuessesLeft();
 
 //Function to capture the keyboard clicks
 document.onkeydown = function(event) {
-    
     left--;
     var letter = String.fromCharCode(event.which).toLowerCase();
     soFar.push(letter);
