@@ -4,7 +4,7 @@ In this assignment, you'll create a Psychic game. The game consists of the compu
 
 This app will run in the browser, and features dynamically updated HTML and CSS powered by JavaScript code.
 
-![Gif of Psychic Game]()
+![Gif of Psychic Game](/assets/demo.gif)
 
 ## Meta
 
